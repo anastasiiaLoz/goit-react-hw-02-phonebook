@@ -23,6 +23,7 @@ class ContactsForm extends Component {
     });
   };
 
+
   onHandleChange = e => {
     const { name, value } = e.target;
     this.setState({ [name]: value });
@@ -48,7 +49,7 @@ class ContactsForm extends Component {
         <label>
           Number
           <input 
-            placeholder="gimme me their number, hun;)"
+            placeholder="gimme their number, hun;)"
             type="tel"
             name="number"
             pattern="\+?\d{1,4}?[-.\s]?\(?\d{1,3}?\)?[-.\s]?\d{1,4}[-.\s]?\d{1,4}[-.\s]?\d{1,9}"

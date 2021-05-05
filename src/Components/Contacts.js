@@ -1,9 +1,9 @@
 import React, { Component } from "react";
 import ContactsForm from "./contactsForm/ContactsForm";
 import ContactsList from "./contactsList/ContactsList";
-import { v4 as uuid } from 'uuid';
 import ContactsSection from "./contactsSection/ContactsSection";
 import ContactsFilter from "./contactsFilter/ContactsFilter";
+import axios from "axios"
 
 
 class Contacts extends Component {
@@ -19,19 +19,48 @@ class Contacts extends Component {
     number: ''
   }
 
-  addContact = contact => {
-    this.setState(prevState => {
-      return {
-        contacts: [...prevState.contacts, { ...contact, id: uuid() }]
-      };
-    });
+
+  async componentDidMount() {
+    try {
+      const { data } = await axios.get(
+        `https://bootycall-phonebook-default-rtdb.firebaseio.com/contacts.json`
+      )
+      if (data) {
+        const contacts = Object.keys(data).map(key => ({ id: key, ...data[key] }))
+        this.setState({ contacts });
+      }
+    } catch (error) {
+
+    }
+  }
+
+  addContact = async (contact) => {
+    try {
+      const { data } = await axios.post(
+        `https://bootycall-phonebook-default-rtdb.firebaseio.com/contacts.json`,
+        contact
+      )
+      this.setState((prev) => {
+        return {
+          contacts: [...prev.contacts, {...contact, id: data.name}]
+        }
+      })
+    } catch (error) {
+      
+    }
   };
 
-  deleteContact = (e) => {
-    const { id } = e.target
-    this.setState({
-      contacts: this.state.contacts.filter(contact=> contact.id !==id)
-    })
+  deleteContact = async (e) => {
+    try {
+      const { id } = e.target
+      await axios.delete(
+        `https://bootycall-phonebook-default-rtdb.firebaseio.com/contacts/${id}.json`
+      );
+      this.setState({
+        contacts: this.state.contacts.filter(contact => contact.id !== id)
+      })
+    } catch (error) {
+    }
   }
 
   onCheckDuplicateName = (name) => {
