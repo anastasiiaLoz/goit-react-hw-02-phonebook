@@ -64,11 +64,7 @@ class Contacts extends Component {
   }
 
   onCheckDuplicateName = (name) => {
-    const isDuplicate = this.state.contacts.some((contact) => contact.name === name)
-    if (isDuplicate) {
-      alert(`${name} is already in contacts.`);
-      return;
-    }
+    return this.state.contacts.some((contact) => contact.name === name)
   }
 
   setFilter = (e) => {
